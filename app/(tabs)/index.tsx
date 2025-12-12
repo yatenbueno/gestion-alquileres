@@ -1,98 +1,95 @@
-import { Image } from 'expo-image';
-import { Platform, StyleSheet } from 'react-native';
+import { useEffect, useState } from 'react';
+import { StyleSheet, Text, View, FlatList, ActivityIndicator } from 'react-native';
+import { supabase } from '@/src/lib/supabase';
+import { Propiedad } from '@/src/types/database.types';
+import { ScreenWrapper } from '@/src/components/ScreenWrapper'; // Importamos el Wrapper
+import { Colors } from '@/src/constants/Colors'; // Importamos Colores
 
-import { HelloWave } from '@/components/hello-wave';
-import ParallaxScrollView from '@/components/parallax-scroll-view';
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
-import { Link } from 'expo-router';
+export default function Index() {
+  const [propiedades, setPropiedades] = useState<Propiedad[]>([]);
+  const [loading, setLoading] = useState(true);
 
-export default function HomeScreen() {
+  useEffect(() => {
+    fetchPropiedades();
+  }, []);
+
+  const fetchPropiedades = async () => {
+    try {
+      setLoading(true);
+      const { data, error } = await supabase.from('propiedad').select('*');
+      if (data) setPropiedades(data);
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <ScreenWrapper style={styles.center}>
+        <ActivityIndicator size="large" color={Colors.primary} />
+      </ScreenWrapper>
+    );
+  }
+
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: 'cmd + d',
-              android: 'cmd + m',
-              web: 'F12',
-            })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <Link href="/modal">
-          <Link.Trigger>
-            <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-          </Link.Trigger>
-          <Link.Preview />
-          <Link.Menu>
-            <Link.MenuAction title="Action" icon="cube" onPress={() => alert('Action pressed')} />
-            <Link.MenuAction
-              title="Share"
-              icon="square.and.arrow.up"
-              onPress={() => alert('Share pressed')}
-            />
-            <Link.Menu title="More" icon="ellipsis">
-              <Link.MenuAction
-                title="Delete"
-                icon="trash"
-                destructive
-                onPress={() => alert('Delete pressed')}
-              />
-            </Link.Menu>
-          </Link.Menu>
-        </Link>
-
-        <ThemedText>
-          {`Tap the Explore tab to learn more about what's included in this starter app.`}
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          {`When you're ready, run `}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
+    <ScreenWrapper>
+      {/* Ya no necesitamos el título aquí, está en el Header del Layout */}
+      
+      <FlatList
+        data={propiedades}
+        keyExtractor={(item) => item.id.toString()}
+        renderItem={({ item }) => (
+          <View style={styles.card}>
+            <View style={styles.cardHeader}>
+              <Text style={styles.cardTitle}>{item.nombre}</Text>
+              <Text style={styles.price}>${item.precio_por_noche}/noche</Text>
+            </View>
+            <Text style={styles.description} numberOfLines={2}>
+              {item.descripcion}
+            </Text>
+          </View>
+        )}
+      />
+    </ScreenWrapper>
   );
 }
 
 const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
+  center: { justifyContent: 'center', alignItems: 'center' },
+  card: {
+    backgroundColor: Colors.card,
+    padding: 15,
+    borderRadius: 12,
+    marginBottom: 15,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.05,
+    shadowRadius: 8,
+    elevation: 2,
+    borderWidth: 1,
+    borderColor: Colors.border,
   },
-  stepContainer: {
-    gap: 8,
+  cardHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
     marginBottom: 8,
   },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
+  cardTitle: { 
+    fontSize: 18, 
+    fontWeight: '700', 
+    color: Colors.text,
+    flex: 1,
   },
+  price: { 
+    fontSize: 16, 
+    color: Colors.success, 
+    fontWeight: 'bold' 
+  },
+  description: {
+    color: Colors.textLight,
+    fontSize: 14,
+  }
 });
