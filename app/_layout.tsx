@@ -29,7 +29,7 @@ export default function RootLayout() {
           options={{ title: 'Gestión Alquileres' }} 
         />
         <Stack.Screen name="(tabs)"/>
-        <Stack.Screen name="modal" options={{ presentation: 'modal', title: 'Modal' }} />
+        <Stack.Screen name="modal" options={{ presentation: 'modal', title: 'Modal' }} />()
         {/* Las demás pantallas se cargarán automáticamente con el estilo default */}
       </Stack>
     </>
