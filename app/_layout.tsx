@@ -1,6 +1,6 @@
+import { Colors } from '@/src/constants/Colors';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import { Colors } from '@/src/constants/Colors';
 
 export default function RootLayout() {
   return (
@@ -28,8 +28,8 @@ export default function RootLayout() {
           name="index" 
           options={{ title: 'Gestión Alquileres' }} 
         />
-        <Stack.Screen name="(tabs)"/>
-        <Stack.Screen name="modal" options={{ presentation: 'modal', title: 'Modal' }} />()
+        <Stack.Screen name="(tabs)" options={{ headerShown: false }}/>
+        <Stack.Screen name="modal" options={{ presentation: 'modal', title: 'Modal' }} />
         {/* Las demás pantallas se cargarán automáticamente con el estilo default */}
       </Stack>
     </>
