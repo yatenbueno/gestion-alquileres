@@ -15,3 +15,15 @@ export interface Cliente {
   email: string | null;
   dni_pasaporte: string | null;
 }
+
+export interface Reserva {
+  id: number;
+  propiedad_id: number;
+  cliente_id: number;
+  fecha_entrada: string;
+  fecha_salida: string;
+  cantidad_noches: number;
+  precio_total: number;
+  estado: 'pendiente' | 'confirmada' | 'cancelada';
+  created_at: string;
+}
