@@ -20,8 +20,8 @@ export interface Reserva {
   id: number;
   propiedad_id: number;
   cliente_id: number;
-  fecha_entrada: string;
-  fecha_salida: string;
+  check_in: string;
+  check_out: string;
   cantidad_noches: number;
   precio_total: number;
   estado: 'pendiente' | 'confirmada' | 'cancelada';

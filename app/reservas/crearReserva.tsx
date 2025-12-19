@@ -34,7 +34,7 @@ export default function CrearReservaScreen() {
   const [showClienteModal, setShowClienteModal] = useState(false);
 
   // Formulario
-  const [fechaEntrada, setFechaEntrada] = useState(""); // Formato YYYY-MM-DD
+  const [checkIn, setCheckIn] = useState(""); // Formato YYYY-MM-DD
   const [noches, setNoches] = useState("");
   const [precioTotal, setPrecioTotal] = useState(0);
   const [loading, setLoading] = useState(false);
@@ -64,7 +64,7 @@ export default function CrearReservaScreen() {
   };
 
   const handleCreate = async () => {
-    if (!selectedPropiedad || !selectedCliente || !fechaEntrada || !noches) {
+    if (!selectedPropiedad || !selectedCliente || !checkIn || !noches) {
       Alert.alert("Error", "Completa todos los campos obligatorios");
       return;
     }
@@ -73,16 +73,16 @@ export default function CrearReservaScreen() {
 
     // Calculamos fecha salida simple (Entrada + Noches) - simplificado para el ejemplo
     // En una app real usaríamos librerías de fecha como 'date-fns'
-    const entrada = new Date(fechaEntrada);
+    const entrada = new Date(checkIn);
     const salida = new Date(entrada);
     salida.setDate(salida.getDate() + parseInt(noches));
-    const fechaSalidaStr = salida.toISOString().split("T")[0];
+    const checkOutStr = salida.toISOString().split("T")[0];
 
     const { error } = await supabase.from("reserva").insert({
       propiedad_id: selectedPropiedad.id,
       cliente_id: selectedCliente.id,
-      fecha_entrada: fechaEntrada,
-      fecha_salida: fechaSalidaStr,
+      check_in: checkIn,
+      check_out: checkOutStr,
       cantidad_noches: parseInt(noches),
       precio_total: precioTotal,
       estado: "confirmada",
@@ -143,8 +143,8 @@ export default function CrearReservaScreen() {
         <TextInput
           style={styles.input}
           placeholder="2024-01-01"
-          value={fechaEntrada}
-          onChangeText={setFechaEntrada}
+          value={checkIn}
+          onChangeText={setCheckIn}
         />
 
         <Text style={styles.label}>Cantidad de Noches *</Text>

@@ -113,7 +113,7 @@ export default function ReservasScreen() {
 
                 <View style={styles.fechasRow}>
                   <Text style={styles.fecha}>
-                    📅 Entrada: {item.fecha_entrada}
+                    📅 Entrada: {item.check_in}
                   </Text>
                   <Text style={styles.fecha}>
                     🌙 {item.cantidad_noches} noches
