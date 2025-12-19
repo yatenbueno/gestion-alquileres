@@ -1,9 +1,9 @@
-import { useState } from 'react';
-import { StyleSheet, TextInput, View, Text, TouchableOpacity, Alert, ActivityIndicator, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
-import { useRouter, Stack } from 'expo-router';
-import { supabase } from '@/src/lib/supabase';
-import { Colors } from '@/src/constants/Colors';
 import { ScreenWrapper } from '@/src/components/ScreenWrapper';
+import { Colors } from '@/src/constants/Colors';
+import { supabase } from '@/src/lib/supabase';
+import { Stack, useRouter } from 'expo-router';
+import { useState } from 'react';
+import { ActivityIndicator, Alert, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 
 export default function CrearClienteScreen() {
   const router = useRouter();
@@ -18,8 +18,8 @@ export default function CrearClienteScreen() {
   const [origen, setOrigen] = useState('');
 
   const handleCreate = async () => {
-    if (!nombre || !apellido || !dni) {
-      Alert.alert('Faltan datos', 'Nombre, Apellido y DNI son obligatorios.');
+    if (!nombre || !apellido) {
+      Alert.alert('Faltan datos', 'Nombre y Apellido son obligatorios.');
       return;
     }
 
@@ -82,7 +82,7 @@ export default function CrearClienteScreen() {
             </View>
           </View>
 
-          <Text style={styles.label}>DNI o Pasaporte *</Text>
+          <Text style={styles.label}>DNI o Pasaporte</Text>
           <TextInput
             style={styles.input}
             placeholder="12345678"
